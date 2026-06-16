@@ -1,0 +1,1421 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>English Assessments - Colegio Nocturno de Cariari</title>
+
+<!-- ============================================================
+     STYLES
+============================================================ -->
+<style>
+  /* ---------- RESET & BASE ---------- */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+    background: #f0f2f5;
+    color: #1a202c;
+    line-height: 1.65;
+    min-height: 100vh;
+  }
+
+  /* ---------- TOP BAR ---------- */
+  .topbar {
+    background: #1F4E79;
+    color: white;
+    padding: 14px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 10px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.25);
+  }
+  .topbar-left h1 { font-size: 17px; font-weight: 700; }
+  .topbar-left p  { font-size: 12px; opacity: 0.85; margin-top: 2px; }
+  .topbar-right { display: flex; gap: 8px; flex-wrap: wrap; }
+  .grade-pill {
+    padding: 6px 16px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    border: 2px solid transparent;
+    transition: all 0.2s;
+    background: rgba(255,255,255,0.15);
+    color: white;
+  }
+  .grade-pill:hover  { background: rgba(255,255,255,0.28); }
+  .grade-pill.active { background: white; color: #1F4E79; border-color: white; }
+
+  /* ---------- INDEX / HOME ---------- */
+  .index-page {
+    max-width: 860px;
+    margin: 40px auto;
+    padding: 0 16px 60px;
+  }
+  .index-hero {
+    background: linear-gradient(135deg, #1F4E79, #2E75B6);
+    color: white;
+    border-radius: 14px;
+    padding: 36px 32px;
+    margin-bottom: 32px;
+    box-shadow: 0 4px 16px rgba(31,78,121,0.25);
+  }
+  .index-hero h2 { font-size: 26px; margin-bottom: 8px; }
+  .index-hero p  { font-size: 15px; opacity: 0.92; }
+  .index-hero .meta {
+    margin-top: 18px; padding-top: 14px;
+    border-top: 1px solid rgba(255,255,255,0.3);
+    display: flex; flex-wrap: wrap; gap: 6px 24px;
+    font-size: 13px;
+  }
+  .cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 18px;
+  }
+  .grade-card {
+    background: white;
+    border-radius: 12px;
+    padding: 24px 22px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+    cursor: pointer;
+    border: 2px solid transparent;
+    transition: all 0.2s;
+    text-align: center;
+  }
+  .grade-card:hover { border-color: #2E75B6; transform: translateY(-3px); box-shadow: 0 6px 18px rgba(0,0,0,0.12); }
+  .grade-card .gc-icon {
+    width: 54px; height: 54px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px; font-weight: 800;
+    margin: 0 auto 14px;
+    color: white;
+  }
+  .gc-8  { background: #548235; }
+  .gc-10 { background: #7030A0; }
+  .gc-11 { background: #1F4E79; }
+  .grade-card h3 { font-size: 17px; color: #1a202c; margin-bottom: 6px; }
+  .grade-card p  { font-size: 13px; color: #6b7280; }
+  .grade-card .skills {
+    margin-top: 14px;
+    display: flex; justify-content: center; gap: 6px; flex-wrap: wrap;
+  }
+  .skill-tag {
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+  }
+  .tag-L  { background: #DCE6F2; color: #1F4E79; }
+  .tag-R  { background: #E2EFD9; color: #375623; }
+  .tag-SI { background: #FFF2CC; color: #7F6000; }
+
+  /* ---------- ASSESSMENT PAGE ---------- */
+  .assessment-page {
+    display: none;
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 28px 16px 70px;
+  }
+  .assessment-page.active { display: block; }
+
+  .page-header {
+    border-radius: 12px;
+    padding: 22px 26px;
+    margin-bottom: 22px;
+    color: white;
+  }
+  .hdr-8  { background: linear-gradient(135deg, #548235, #70AD47); }
+  .hdr-10 { background: linear-gradient(135deg, #7030A0, #9B59B6); }
+  .hdr-11 { background: linear-gradient(135deg, #1F4E79, #2E75B6); }
+  .page-header h2 { font-size: 22px; font-weight: 700; margin-bottom: 4px; }
+  .page-header .hdr-sub { font-size: 14px; opacity: 0.9; }
+  .page-header .hdr-meta {
+    margin-top: 12px; padding-top: 12px;
+    border-top: 1px solid rgba(255,255,255,0.3);
+    display: flex; flex-wrap: wrap; gap: 6px 20px;
+    font-size: 13px;
+  }
+
+  /* INSTRUCTIONS BOX */
+  .instr-box {
+    background: #FFF8E7;
+    border-left: 5px solid #F5A623;
+    padding: 14px 18px;
+    border-radius: 6px;
+    margin-bottom: 22px;
+    font-size: 13.5px;
+  }
+  .instr-box h3 { color: #8a5800; margin-bottom: 8px; font-size: 14px; }
+  .instr-box p  { margin-bottom: 5px; }
+  .instr-box strong { color: #1F4E79; }
+
+  /* ACTION BAR */
+  .action-bar {
+    background: white;
+    padding: 11px 16px;
+    border-radius: 10px;
+    margin-bottom: 18px;
+    display: flex; justify-content: space-between; align-items: center;
+    flex-wrap: wrap; gap: 8px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    font-size: 13px;
+  }
+  .prog { color: #6b7280; }
+  .prog strong { color: #1F4E79; }
+
+  /* TABS */
+  .tabs {
+    display: flex; flex-wrap: wrap; gap: 8px;
+    background: white; padding: 8px; border-radius: 10px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+  }
+  .tab-btn {
+    flex: 1 1 auto; min-width: 130px;
+    padding: 9px 14px; border: none; background: transparent;
+    color: #4b5563; font-size: 13px; font-weight: 600;
+    cursor: pointer; border-radius: 6px; transition: all 0.2s;
+    font-family: inherit; text-align: center;
+  }
+  .tab-btn:hover  { background: #f0f4f9; color: #1F4E79; }
+  .tab-btn.active { background: #1F4E79; color: white; }
+  .tab-btn.done   { border-left: 4px solid #10b981; }
+
+  /* ACTIVITY CARD */
+  .act-card {
+    display: none;
+    background: white; border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06); overflow: hidden;
+  }
+  .act-card.active { display: block; }
+  .act-hdr {
+    padding: 18px 22px 14px;
+    border-bottom: 2px solid #f0f4f9;
+    display: flex; align-items: flex-start; gap: 14px; flex-wrap: wrap;
+  }
+  .act-hdr-text { flex: 1; }
+  .act-hdr h2 { font-size: 18px; color: #111827; }
+  .act-badge {
+    display: inline-block; padding: 3px 10px; border-radius: 20px;
+    font-size: 11px; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.4px; margin-bottom: 6px;
+  }
+  .badge-L  { background: #DCE6F2; color: #1F4E79; }
+  .badge-R  { background: #E2EFD9; color: #375623; }
+  .badge-8  { background: #E2EFDA; color: #375623; }
+  .badge-10 { background: #EAD9F5; color: #5B0FA0; }
+  .badge-11 { background: #DCE6F2; color: #1F4E79; }
+
+  /* STEPS */
+  .step { padding: 18px 22px; border-bottom: 1px solid #f0f4f9; }
+  .step:last-child { border-bottom: none; }
+  .step-hdr { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
+  .step-num {
+    width: 30px; height: 30px; border-radius: 50%;
+    background: #1F4E79; color: white;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 700; font-size: 14px; flex-shrink: 0;
+  }
+  .step-num.locked { background: #9ca3af; }
+  .step-ttl { font-size: 16px; font-weight: 700; color: #111827; }
+
+  /* AUDIO */
+  .audio-wrap {
+    background: #fafbfc; border: 1px solid #e5e7eb;
+    border-radius: 8px; padding: 16px 18px;
+  }
+  .audio-wrap audio { width: 100%; margin-bottom: 6px; }
+  .audio-note { font-size: 12px; color: #6b7280; }
+  .audio-err {
+    background: #fef2f2; border: 1px dashed #ef4444;
+    color: #991b1b; padding: 10px 14px; border-radius: 6px;
+    font-size: 13px; margin-top: 8px; display: none;
+  }
+
+  /* READING TEXT */
+  .read-text {
+    background: #fafbfc; border: 1px solid #e5e7eb;
+    border-radius: 8px; padding: 18px 20px;
+    font-size: 15px; line-height: 1.75;
+    font-family: Georgia, "Times New Roman", serif; color: #1f2937;
+  }
+  .read-text p { margin-bottom: 10px; }
+  .read-text p:last-child { margin-bottom: 0; }
+  .read-text .speaker { font-weight: 700; }
+
+  /* VOCAB */
+  .vocab {
+    margin-top: 12px; background: #f0f4f9;
+    padding: 12px 16px; border-radius: 6px; font-size: 13px;
+  }
+  .vocab strong { color: #1F4E79; }
+  .vword { display: inline-block; margin-right: 14px; margin-bottom: 4px; }
+  .vword b { color: #1F4E79; }
+
+  /* QUESTIONS */
+  .question {
+    margin-bottom: 16px; padding: 13px 15px;
+    background: #fafbfc; border: 1px solid #e5e7eb; border-radius: 8px;
+  }
+  .q-text { font-weight: 600; margin-bottom: 9px; color: #111827; }
+  .qnum {
+    display: inline-block; background: #1F4E79; color: white;
+    width: 21px; height: 21px; border-radius: 50%;
+    text-align: center; font-size: 11px; line-height: 21px; margin-right: 7px;
+  }
+  .options { display: flex; flex-direction: column; gap: 6px; }
+  .opt {
+    display: flex; align-items: flex-start; gap: 10px;
+    padding: 9px 12px; border: 2px solid #e5e7eb; border-radius: 6px;
+    cursor: pointer; transition: all 0.15s; background: white;
+  }
+  .opt:hover { border-color: #2E75B6; background: #f0f7fc; }
+  .opt input { margin-top: 3px; accent-color: #1F4E79; flex-shrink: 0; }
+  .opt span { font-size: 14px; }
+  .opt.selected  { border-color: #1F4E79; background: #f0f7fc; }
+  .opt.correct   { border-color: #10b981; background: #ecfdf5; }
+  .opt.incorrect { border-color: #ef4444; background: #fef2f2; }
+  .opt.correct::after   { content: "Correct";   color: #10b981; font-weight: 700; margin-left: auto; font-size: 12px; align-self: center; }
+  .opt.incorrect::after { content: "Incorrect"; color: #ef4444; font-weight: 700; margin-left: auto; font-size: 12px; align-self: center; }
+
+  /* FEEDBACK */
+  .fb { margin-top: 10px; padding: 11px 15px; border-radius: 6px; font-size: 14px; display: none; }
+  .fb.show    { display: block; }
+  .fb.correct { background: #ecfdf5; border-left: 4px solid #10b981; color: #065f46; }
+  .fb.incorrect { background: #fef2f2; border-left: 4px solid #ef4444; color: #991b1b; }
+  .fb strong { display: block; margin-bottom: 3px; }
+
+  /* SCORE */
+  .score-box {
+    background: linear-gradient(135deg,#1F4E79,#2E75B6);
+    color: white; padding: 18px; border-radius: 8px;
+    text-align: center; margin-top: 14px; display: none;
+  }
+  .score-box.show { display: block; }
+  .score-box .sn  { font-size: 34px; font-weight: 700; margin: 6px 0; }
+  .score-box .sl  { font-size: 12px; opacity: 0.9; }
+  .score-box .sm  { font-size: 13px; margin-top: 7px; font-style: italic; }
+
+  /* LOCKED STEP */
+  .step.locked { opacity: 0.55; pointer-events: none; }
+  .step.locked .step-num { background: #9ca3af; }
+  .lock-msg { text-align: center; color: #6b7280; font-style: italic; font-size: 14px; padding: 12px; }
+
+  /* SUMMARY */
+  .summary {
+    background: white; border-radius: 12px; padding: 22px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06); margin-top: 20px; display: none;
+  }
+  .summary.show { display: block; }
+  .summary h2 { color: #1F4E79; margin-bottom: 14px; font-size: 20px; }
+  .sum-grid {
+    display: grid; grid-template-columns: repeat(auto-fit,minmax(170px,1fr));
+    gap: 10px; margin: 12px 0;
+  }
+  .sum-item { background: #f0f4f9; padding: 12px 14px; border-radius: 8px; text-align: center; }
+  .sum-item .sl { font-size: 11px; color: #6b7280; text-transform: uppercase; letter-spacing: 0.4px; }
+  .sum-item .sv { font-size: 20px; font-weight: 700; color: #1F4E79; margin-top: 3px; }
+  .sum-total {
+    background: linear-gradient(135deg,#1F4E79,#548235);
+    color: white; padding: 18px; border-radius: 8px; text-align: center; margin-top: 10px;
+  }
+  .sum-total .tn { font-size: 38px; font-weight: 700; }
+
+  /* BUTTONS */
+  .btn {
+    padding: 10px 20px; font-size: 13px; font-weight: 600;
+    border: none; border-radius: 6px; cursor: pointer;
+    transition: all 0.2s; font-family: inherit;
+  }
+  .btn-p { background: #1F4E79; color: white; }
+  .btn-p:hover { background: #163E5F; }
+  .btn-p:disabled { background: #9ca3af; cursor: not-allowed; }
+  .btn-s { background: #e5e7eb; color: #374151; margin-left: 8px; }
+  .btn-s:hover { background: #d1d5db; }
+  .btn-row { margin-top: 12px; display: flex; align-items: center; flex-wrap: wrap; gap: 8px; }
+
+  /* INDICATOR */
+  .indicator {
+    margin-top: 12px; background: #f0f4f9; border-left: 4px solid #1F4E79;
+    padding: 10px 14px; border-radius: 4px; font-size: 12.5px;
+    font-style: italic; color: #374151;
+  }
+
+  @media (max-width: 600px) {
+    .topbar { padding: 12px 14px; }
+    .topbar-left h1 { font-size: 15px; }
+    .act-hdr, .step { padding: 14px; }
+    .read-text { font-size: 14px; }
+    .tab-btn { font-size: 12px; min-width: 100px; }
+  }
+  @media print {
+    .topbar, .action-bar, .btn, .instr-box, .audio-wrap, .index-page { display: none !important; }
+    .assessment-page.active { display: block !important; }
+    .act-card { display: block !important; page-break-after: always; }
+    .fb, .step.locked { display: block !important; opacity: 1; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ==================== TOP BAR ==================== -->
+<div class="topbar">
+  <div class="topbar-left">
+    <h1>English Assessments</h1>
+    <p>Colegio Nocturno de Cariari</p>
+  </div>
+  <div class="topbar-right">
+    <button class="grade-pill active" onclick="showPage('index')">Home</button>
+    <button class="grade-pill" onclick="showPage('8')" id="pill-8">8th Grade</button>
+    <button class="grade-pill" onclick="showPage('10')" id="pill-10">10th Grade</button>
+    <button class="grade-pill" onclick="showPage('11')" id="pill-11">11th Grade</button>
+  </div>
+</div>
+
+<!-- ==================== INDEX ==================== -->
+<div class="index-page" id="page-index">
+  <div class="index-hero">
+    <h2>English Assessments — Three Levels</h2>
+    <p>Select a grade below to start your assessment. Each level has its own reading and listening activities.</p>
+    <div class="meta">
+      <span><strong>School:</strong> Colegio Nocturno de Cariari</span>
+      <span><strong>Subject:</strong> English</span>
+      <span><strong>Teacher:</strong> Rodney</span>
+    </div>
+  </div>
+  <div class="cards-grid">
+    <div class="grade-card" onclick="showPage('8')">
+      <div class="gc-icon gc-8">8</div>
+      <h3>8th Grade</h3>
+      <p>Listening and Reading about sports and everyday activities.</p>
+      <div class="skills">
+        <span class="skill-tag tag-L">Listening</span>
+        <span class="skill-tag tag-R">Reading</span>
+      </div>
+    </div>
+    <div class="grade-card" onclick="showPage('10')">
+      <div class="gc-icon gc-10">10</div>
+      <h3>10th Grade</h3>
+      <p>Reading familiar texts: tweets, posts, blogs, and short stories.</p>
+      <div class="skills">
+        <span class="skill-tag tag-R">Reading</span>
+      </div>
+    </div>
+    <div class="grade-card" onclick="showPage('11')">
+      <div class="gc-icon gc-11">11</div>
+      <h3>11th Grade</h3>
+      <p>Listening and Reading about technology, inventions, and innovation.</p>
+      <div class="skills">
+        <span class="skill-tag tag-L">Listening</span>
+        <span class="skill-tag tag-R">Reading</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== 8TH GRADE ==================== -->
+<div class="assessment-page" id="page-8">
+  <div class="page-header hdr-8">
+    <h2>8th Grade Assessment</h2>
+    <div class="hdr-sub">Listening and Reading — Sports and Everyday Activities</div>
+    <div class="hdr-meta">
+      <span><strong>Level:</strong> 8th Grade</span>
+      <span><strong>Skills:</strong> Listening (L.2) · Reading (R.2)</span>
+      <span><strong>School:</strong> Colegio Nocturno de Cariari</span>
+    </div>
+  </div>
+  <div class="instr-box">
+    <h3>Instructions</h3>
+    <p><strong>Step 1:</strong> Listen to / read the content once. Focus on the general idea.</p>
+    <p><strong>Step 2:</strong> Answer the main idea question.</p>
+    <p><strong>Step 3:</strong> Listen / read again. Pay attention to specific details.</p>
+    <p><strong>Step 4:</strong> Answer the detail questions. You can listen or read again as many times as you need.</p>
+  </div>
+  <div class="action-bar">
+    <div class="prog">Completed: <strong id="prog-8">0 / 2</strong></div>
+    <div>
+      <button class="btn btn-s" onclick="resetGrade('8')">Reset</button>
+      <button class="btn btn-s" onclick="window.print()">Print</button>
+    </div>
+  </div>
+  <div class="tabs" id="tabs-8"></div>
+  <div id="cards-8"></div>
+  <div class="summary" id="sum-8">
+    <h2>Final Result</h2>
+    <p style="margin-bottom:12px;">Share this result with your teacher.</p>
+    <div class="sum-grid" id="sum-grid-8"></div>
+    <div class="sum-total">
+      <div class="sl" style="font-size:11px;opacity:.9;text-transform:uppercase;letter-spacing:.4px;">Total score</div>
+      <div class="tn" id="sum-num-8">0/0</div>
+      <div id="sum-msg-8" style="font-style:italic;font-size:13px;margin-top:6px;"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== 10TH GRADE ==================== -->
+<div class="assessment-page" id="page-10">
+  <div class="page-header hdr-10">
+    <h2>10th Grade Assessment</h2>
+    <div class="hdr-sub">Reading — Familiar Texts: Tweets, Posts, Blogs, and Short Stories</div>
+    <div class="hdr-meta">
+      <span><strong>Level:</strong> 10th Grade</span>
+      <span><strong>Skill:</strong> Reading (R.3)</span>
+      <span><strong>School:</strong> Colegio Nocturno de Cariari</span>
+    </div>
+  </div>
+  <div class="instr-box">
+    <h3>Instructions</h3>
+    <p><strong>Step 1:</strong> Read the text once. Focus on the general idea.</p>
+    <p><strong>Step 2:</strong> Answer the main idea question.</p>
+    <p><strong>Step 3:</strong> Read again. Look for specific information.</p>
+    <p><strong>Step 4:</strong> Answer the detail questions. You can read again as many times as you need.</p>
+  </div>
+  <div class="action-bar">
+    <div class="prog">Completed: <strong id="prog-10">0 / 2</strong></div>
+    <div>
+      <button class="btn btn-s" onclick="resetGrade('10')">Reset</button>
+      <button class="btn btn-s" onclick="window.print()">Print</button>
+    </div>
+  </div>
+  <div class="tabs" id="tabs-10"></div>
+  <div id="cards-10"></div>
+  <div class="summary" id="sum-10">
+    <h2>Final Result</h2>
+    <p style="margin-bottom:12px;">Share this result with your teacher.</p>
+    <div class="sum-grid" id="sum-grid-10"></div>
+    <div class="sum-total">
+      <div class="sl" style="font-size:11px;opacity:.9;text-transform:uppercase;letter-spacing:.4px;">Total score</div>
+      <div class="tn" id="sum-num-10">0/0</div>
+      <div id="sum-msg-10" style="font-style:italic;font-size:13px;margin-top:6px;"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== 11TH GRADE ==================== -->
+<div class="assessment-page" id="page-11">
+  <div class="page-header hdr-11">
+    <h2>11th Grade Assessment</h2>
+    <div class="hdr-sub">Listening and Reading — Technology, Inventions, and Innovation</div>
+    <div class="hdr-meta">
+      <span><strong>Level:</strong> 11th Grade</span>
+      <span><strong>Skills:</strong> Listening (L.2) · Reading (R.2)</span>
+      <span><strong>School:</strong> Colegio Nocturno de Cariari</span>
+    </div>
+  </div>
+  <div class="instr-box">
+    <h3>Instructions</h3>
+    <p><strong>Step 1:</strong> Listen to / read the content once. Focus on the general idea.</p>
+    <p><strong>Step 2:</strong> Answer the main idea question.</p>
+    <p><strong>Step 3:</strong> Listen / read again. This time, focus on supporting ideas and specific arguments.</p>
+    <p><strong>Step 4:</strong> Answer the detail questions. You can listen or read again as many times as you need.</p>
+  </div>
+  <div class="action-bar">
+    <div class="prog">Completed: <strong id="prog-11">0 / 2</strong></div>
+    <div>
+      <button class="btn btn-s" onclick="resetGrade('11')">Reset</button>
+      <button class="btn btn-s" onclick="window.print()">Print</button>
+    </div>
+  </div>
+  <div class="tabs" id="tabs-11"></div>
+  <div id="cards-11"></div>
+  <div class="summary" id="sum-11">
+    <h2>Final Result</h2>
+    <p style="margin-bottom:12px;">Share this result with your teacher.</p>
+    <div class="sum-grid" id="sum-grid-11"></div>
+    <div class="sum-total">
+      <div class="sl" style="font-size:11px;opacity:.9;text-transform:uppercase;letter-spacing:.4px;">Total score</div>
+      <div class="tn" id="sum-num-11">0/0</div>
+      <div id="sum-msg-11" style="font-style:italic;font-size:13px;margin-top:6px;"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
+     SCRIPT
+============================================================ -->
+<script>
+
+// ============================================================
+// DATA
+// ============================================================
+
+const DATA = {
+
+  // ---------- 8TH GRADE ----------
+  '8': [
+    {
+      id: '8-1', grade: '8', skill: 'L', label: 'Listening',
+      title: 'People Talk About Their Favorite Sports',
+      audio: 'audio1_8th.mp3',
+      indicator: 'L.2. Extract important information from audio texts (e.g., sports announcements, sports scores) provided the message is delivered clearly.',
+      vocab: [
+        ['retired','no longer working; having stopped your job'],
+        ['windsurfing','a sport using a board with a sail on water'],
+        ['waterskiing','a sport where you ski on water pulled by a boat'],
+        ['jog','to run slowly for exercise'],
+        ['knees','the joints in the middle of your legs']
+      ],
+      script: [
+        '1. Ever since I was a little kid, I loved the water and went swimming all the time. Now that I\'m retired, I swim every day and I feel like a kid again. Swimming is definitely my favorite sport.',
+        '2. I love water sports, especially fast ones like windsurfing and waterskiing. Swimming and diving are okay, but not as exciting.',
+        '3. My favorite sport is soccer. I don\'t play it anymore, but I watch it almost every day. And I\'m not alone — millions of people all over the world watch soccer every day.',
+        '4. I like to jog. I\'ve gone jogging almost every day for the last three years. But I can\'t jog now. My knees are bad and my doctor said I shouldn\'t jog for two months.',
+        '5. I love playing baseball. It\'s probably my favorite sport — but just to play, not to watch. If I try to watch baseball on TV, I fall asleep!'
+      ],
+      mainIdea: {
+        q: 'What are the five people MAINLY talking about?',
+        opts: [
+          'How to stay healthy by exercising every day.',
+          'Their favorite sports and their personal experiences with them.',
+          'Why water sports are better than other sports.',
+          'Problems they have had with different sports.'
+        ],
+        correct: 1,
+        exp: 'Each person talks about their favorite sport and shares something personal about their experience with it.'
+      },
+      details: [
+        {
+          q: 'Why does the first person say swimming makes them "feel like a kid again"?',
+          opts: [
+            'Because swimming is a children\'s sport.',
+            'Because they loved swimming since childhood and now do it every day again.',
+            'Because they are learning to swim for the first time.',
+            'Because their children swim with them every day.'
+          ],
+          correct: 1,
+          exp: 'The first person says they loved the water since childhood and now swims every day after retiring.'
+        },
+        {
+          q: 'According to the second person, what makes water sports like windsurfing and waterskiing better than swimming for them?',
+          opts: [
+            'They are safer than swimming.',
+            'They are cheaper than swimming.',
+            'They are faster and more exciting.',
+            'They are easier to learn.'
+          ],
+          correct: 2,
+          exp: 'The second person says they prefer fast water sports like windsurfing and waterskiing because they are more exciting than swimming or diving.'
+        },
+        {
+          q: 'Why can\'t the fourth person jog right now?',
+          opts: [
+            'Because they lost their running shoes.',
+            'Because the weather is too cold.',
+            'Because their knees are bad and the doctor said not to jog for two months.',
+            'Because they moved to a new city.'
+          ],
+          correct: 2,
+          exp: 'The fourth person says their knees are bad and the doctor told them not to jog for two months.'
+        },
+        {
+          q: 'What happens to the fifth person when they watch baseball on TV?',
+          opts: [
+            'They feel very excited.',
+            'They fall asleep.',
+            'They want to play immediately.',
+            'They call their friends to watch together.'
+          ],
+          correct: 1,
+          exp: 'The fifth person says watching baseball on TV puts them to sleep, even though they love playing it.'
+        }
+      ]
+    },
+    {
+      id: '8-2', grade: '8', skill: 'R', label: 'Reading',
+      title: 'Sports Equipment: What Do You Need?',
+      indicator: 'R.2. Recognize some key terminology from subject areas (e.g., labels on sports equipment).',
+      vocab: [
+        ['equipment','the things you need to do a sport or activity'],
+        ['helmet','a hard hat that protects your head'],
+        ['shin guards','pads that protect the front of your legs'],
+        ['goggles','glasses that protect your eyes in water or sports'],
+        ['racket','a tool with a round frame used to hit a ball in tennis']
+      ],
+      text: [
+        'Every sport needs special equipment to play safely and correctly. Learning the names of sports equipment is very important for all athletes.',
+        '⚽ Soccer players need a ball, cleats (special shoes with studs on the bottom), shin guards to protect their legs, and a goal to score in. The goalkeeper also wears gloves.',
+        '🏊 Swimmers need a swimsuit, goggles to protect their eyes, and a swim cap to keep their hair out of the water. In competitions, swimmers also use a starting block.',
+        '🎾 Tennis players need a racket to hit the ball and tennis balls. They also wear special shoes with flat soles to move quickly on the court.',
+        '🚴 Cyclists must always wear a helmet to protect their head. They also need a bicycle, cycling gloves, and special cycling shoes that attach to the pedals.',
+        '⚾ Baseball players need a bat to hit the ball, a glove to catch it, and a helmet to protect their head. The catcher also wears a chest protector and a face mask.',
+        'Remember: using the right equipment helps athletes perform better and stay safe during practice and competitions.'
+      ],
+      mainIdea: {
+        q: 'What is the text MAINLY about?',
+        opts: [
+          'How to become a professional athlete.',
+          'The history of different sports around the world.',
+          'The equipment needed for different sports and why it is important.',
+          'How to buy sports equipment online.'
+        ],
+        correct: 2,
+        exp: 'The text describes the equipment needed for several sports (soccer, swimming, tennis, cycling, baseball) and explains why using the right equipment is important.'
+      },
+      details: [
+        {
+          q: 'What do soccer goalkeepers wear that other players do NOT wear?',
+          opts: ['Cleats','Shin guards','Gloves','A helmet'],
+          correct: 2,
+          exp: 'The text says "the goalkeeper also wears gloves," which is equipment specific to that position.'
+        },
+        {
+          q: 'Why do swimmers wear goggles?',
+          opts: [
+            'To swim faster.',
+            'To protect their eyes in the water.',
+            'To keep their hair out of the water.',
+            'To see the other swimmers.'
+          ],
+          correct: 1,
+          exp: 'The text says swimmers wear "goggles to protect their eyes."'
+        },
+        {
+          q: 'Which piece of equipment do baseball catchers wear that other players do NOT?',
+          opts: ['A bat','A glove','A helmet','A chest protector and face mask'],
+          correct: 3,
+          exp: 'The text says "the catcher also wears a chest protector and a face mask."'
+        },
+        {
+          q: 'According to the text, why is it important to use the right sports equipment?',
+          opts: [
+            'Because it makes athletes look professional.',
+            'Because it helps athletes perform better and stay safe.',
+            'Because sports rules require expensive equipment.',
+            'Because coaches choose the equipment for their teams.'
+          ],
+          correct: 1,
+          exp: 'The text concludes: "using the right equipment helps athletes perform better and stay safe during practice and competitions."'
+        }
+      ]
+    }
+  ],
+
+  // ---------- 10TH GRADE ----------
+  '10': [
+    {
+      id: '10-1', grade: '10', skill: 'R', label: 'Reading',
+      title: 'Social Media: Real Life, Real Feelings',
+      indicator: 'R.3. Understand texts of various lengths, as long as the words used are familiar and/or concern areas of learners\' interest (e.g., tweets, memes, poems, posts, blogs, comics, short stories, videos) supported by the use of key words, diagrams, and illustrations.',
+      vocab: [
+        ['highlight reel','only the best or most exciting moments shown publicly'],
+        ['comparison','looking at two things to see how they are similar or different'],
+        ['anxiety','a feeling of worry or fear about what might happen'],
+        ['authentic','real and genuine, not fake'],
+        ['intentional','done on purpose, with a plan']
+      ],
+      text: [
+        '📱 @TeenVoices — Blog Post: "Why I Deleted Instagram for a Month"',
+        '',
+        'I used to spend about 3 hours a day on Instagram. I followed celebrities, influencers, and classmates. Every morning, the first thing I did was check my phone. Does this sound familiar?',
+        '',
+        'Here is what I noticed: the more I scrolled, the worse I felt. I was comparing my everyday life to other people\'s highlight reels. They looked happier, more successful, and more popular than me. But were they really?',
+        '',
+        '💬 Comment from @marcos_cr: "Same here! I felt like everyone was having fun without me. Then I realized they only post the good stuff."',
+        '',
+        '💬 Comment from @sofia_reads: "There\'s actually research showing that social media comparison causes anxiety in teenagers. It\'s not just feelings — it\'s science."',
+        '',
+        'So I decided to take a break. For one month, I deleted Instagram from my phone. At first, it was hard. I felt like I was missing out. But after a week, something changed. I started reading more, spending time with my family, and sleeping better.',
+        '',
+        'The conclusion? Social media is not bad by itself — it depends on HOW you use it. Use it to connect, create, and learn. But be intentional. Your real life is not a highlight reel, and that is perfectly okay. 🌱'
+      ],
+      mainIdea: {
+        q: 'What is the MAIN message of this blog post?',
+        opts: [
+          'Social media is dangerous and everyone should delete it permanently.',
+          'Celebrities always look happier on social media than in real life.',
+          'Social media can affect how we feel, and how we use it matters.',
+          'Deleting Instagram for a month will solve all personal problems.'
+        ],
+        correct: 2,
+        exp: 'The writer\'s main point is that social media is not bad by itself — the problem is how we use it, especially spending too much time comparing our real lives to other people\'s highlight reels.'
+      },
+      details: [
+        {
+          q: 'What did the writer do every morning before deciding to take a break?',
+          opts: [
+            'They read a book.',
+            'They checked their phone and scrolled through Instagram.',
+            'They went for a walk.',
+            'They called their friends.'
+          ],
+          correct: 1,
+          exp: 'The writer says: "Every morning, the first thing I did was check my phone."'
+        },
+        {
+          q: 'According to @sofia_reads, what does research show about social media comparison?',
+          opts: [
+            'It helps teenagers feel more connected.',
+            'It causes anxiety in teenagers.',
+            'It improves academic performance.',
+            'It has no effect on teenagers\' emotions.'
+          ],
+          correct: 1,
+          exp: '@sofia_reads comments: "research showing that social media comparison causes anxiety in teenagers."'
+        },
+        {
+          q: 'What positive changes happened after the writer deleted Instagram for a week?',
+          opts: [
+            'They got more followers and became more popular.',
+            'They started reading more, spending time with family, and sleeping better.',
+            'They started creating their own blog and posting every day.',
+            'They realized their classmates were not really happy either.'
+          ],
+          correct: 1,
+          exp: 'The writer says: "I started reading more, spending time with my family, and sleeping better."'
+        },
+        {
+          q: 'According to the writer, in what way SHOULD people use social media?',
+          opts: [
+            'To compare themselves with others and improve.',
+            'To post at least three times a day to stay relevant.',
+            'To connect, create, and learn — but intentionally.',
+            'To follow only celebrities and famous influencers.'
+          ],
+          correct: 2,
+          exp: 'The writer says: "Use it to connect, create, and learn. But be intentional."'
+        }
+      ]
+    },
+    {
+      id: '10-2', grade: '10', skill: 'R', label: 'Reading',
+      title: 'A Short Story: The Last Message',
+      indicator: 'R.3. Understand texts of various lengths, as long as the words used are familiar and/or concern areas of learners\' interest (e.g., tweets, memes, poems, posts, blogs, comics, short stories, videos) supported by the use of key words, diagrams, and illustrations.',
+      vocab: [
+        ['screen','the flat surface of a phone, computer, or TV that shows images'],
+        ['glowing','producing a soft, steady light'],
+        ['whispered','spoke very quietly'],
+        ['presence','being in the same place as someone; their company'],
+        ['realize','to understand or become aware of something']
+      ],
+      text: [
+        '📖 Short Story: "The Last Message"',
+        '',
+        'Lucia sat at the dinner table, but her eyes were on her phone. Her mom was talking about something — a trip they used to take every summer — but Lucia was only half-listening. A notification blinked: her friend had just posted a new video.',
+        '',
+        'Her dad put down his fork. "Lucia," he said quietly, "we\'re right here."',
+        '',
+        'She looked up. Her parents were watching her with patient eyes. The candle on the table was still glowing. Outside, the rain was soft against the window.',
+        '',
+        '"Sorry," she whispered.',
+        '',
+        'Later that night, her mom knocked on her door.',
+        '"I\'m not angry," her mom said. "I just miss you sometimes. Even when you\'re right there."',
+        '',
+        'That sentence stayed with Lucia. She picked up her phone and opened her messages. She typed: "Mom. Can we go on that trip this summer? Just us."',
+        '',
+        'Three seconds later, a reply came. It was just one word: "Yes."',
+        '',
+        'And for the first time in a long time, Lucia put her phone face down on the table. She walked to the living room where her parents were sitting. She sat between them and said nothing. She just stayed.',
+        '',
+        '🌧️ Sometimes, presence is the most powerful message you can send.'
+      ],
+      mainIdea: {
+        q: 'What is the MAIN theme of this short story?',
+        opts: [
+          'Teenagers should not have phones at the dinner table.',
+          'Parents need to talk more with their children about technology.',
+          'Being truly present with the people we love matters more than screens.',
+          'Social media notifications are too distracting for young people.'
+        ],
+        correct: 2,
+        exp: 'The story\'s central message is about the importance of being truly present with the people we love, rather than being physically there but mentally distracted by a screen.'
+      },
+      details: [
+        {
+          q: 'What was Lucia doing while her mother was talking at dinner?',
+          opts: [
+            'She was reading a book.',
+            'She was only half-listening because she was looking at her phone.',
+            'She was helping set the table.',
+            'She was watching TV.'
+          ],
+          correct: 1,
+          exp: 'The story says Lucia\'s "eyes were on her phone" and she "was only half-listening" to her mom.'
+        },
+        {
+          q: 'What did Lucia\'s mom say that stayed with her?',
+          opts: [
+            '"You need to put your phone away at dinner."',
+            '"Your friends are more important than your family."',
+            '"I just miss you sometimes. Even when you\'re right there."',
+            '"We need to talk about your phone use."'
+          ],
+          correct: 2,
+          exp: 'Lucia\'s mom says: "I just miss you sometimes. Even when you\'re right there." This sentence stayed with Lucia.'
+        },
+        {
+          q: 'What action did Lucia take after receiving her mom\'s reply?',
+          opts: [
+            'She posted about the conversation on social media.',
+            'She called her friend to share the news.',
+            'She put her phone face down and went to sit with her parents.',
+            'She went to sleep early feeling sad.'
+          ],
+          correct: 2,
+          exp: 'Lucia put her phone face down on the table and walked to the living room to sit with her parents.'
+        },
+        {
+          q: 'What does the line "presence is the most powerful message you can send" mean in the context of the story?',
+          opts: [
+            'Sending text messages is the best way to communicate.',
+            'Being physically and emotionally there for someone is more meaningful than any digital message.',
+            'Lucia should use her phone more to stay connected with her family.',
+            'Notifications on a phone are stronger than real conversations.'
+          ],
+          correct: 1,
+          exp: 'The final sentence reflects the story\'s message: truly being there for someone — physically and emotionally present — is more powerful than any digital interaction.'
+        }
+      ]
+    }
+  ],
+
+  // ---------- 11TH GRADE ----------
+  '11': [
+    {
+      id: '11-1', grade: '11', skill: 'L', label: 'Listening',
+      title: 'Social Media and Its Influence on Our Lives',
+      audio: 'audio1_11th.mp3',
+      indicator: 'L.2. Understand the main points of stories and other text read aloud in the classroom related to inventions, living in a tech world, safety, and the next wave of innovations.',
+      vocab: [
+        ['platforms','websites or apps where people share content (e.g., Instagram, TikTok)'],
+        ['promote','to advertise or support something to make it more popular'],
+        ['influence','the power to affect how people think or behave'],
+        ['access','the ability to reach or use something'],
+        ['opportunity','a chance to do or achieve something']
+      ],
+      script: [
+        'Today I am going to talk about social media and its influence on our lives.',
+        'Social media has become one of the most important tools in modern society. Platforms like Instagram, TikTok, Facebook, and other applications allow people to communicate, share ideas, and connect with others around the world.',
+        'One of the biggest advantages of social media is communication. People can stay in contact with family and friends even if they live far away. It also helps students because they can find educational content, learn new skills, and access information quickly.',
+        'Another important benefit is that social media creates opportunities. Many people use these platforms to promote businesses, share their talents, or create careers online.',
+        'However, social media also has serious disadvantages. One major problem is misinformation — false information that spreads quickly and can confuse or mislead people. Another issue is the impact on mental health. Spending too much time on social media can cause anxiety, low self-esteem, and feelings of loneliness, especially in young people.',
+        'Finally, there are concerns about privacy and safety. Users often share personal information without realizing the risks. This can lead to identity theft, cyberbullying, or contact with dangerous strangers.',
+        'In conclusion, social media is a powerful tool that can connect us and create opportunities, but it must be used responsibly. Being aware of its risks and using it with a critical mindset is essential in today\'s tech world.'
+      ],
+      mainIdea: {
+        q: 'What is the speaker\'s MAIN argument about social media?',
+        opts: [
+          'Social media should be banned because it causes too many problems.',
+          'Social media is only useful for businesses and careers.',
+          'Social media is a powerful tool with both benefits and serious risks that require responsible use.',
+          'Young people are the only ones affected by the negative effects of social media.'
+        ],
+        correct: 2,
+        exp: 'The speaker presents both advantages (communication, education, opportunities) and disadvantages (misinformation, mental health, privacy) before concluding that responsible use is essential.'
+      },
+      details: [
+        {
+          q: 'According to the speaker, how does social media benefit students specifically?',
+          opts: [
+            'It allows them to avoid doing homework.',
+            'It helps them find educational content, learn new skills, and access information quickly.',
+            'It connects them with university professors directly.',
+            'It gives them free access to textbooks and libraries.'
+          ],
+          correct: 1,
+          exp: 'The speaker says students benefit because "they can find educational content, learn new skills, and access information quickly."'
+        },
+        {
+          q: 'What does the speaker say misinformation causes?',
+          opts: [
+            'It causes social media platforms to shut down.',
+            'It confuses or misleads people.',
+            'It reduces the number of users on platforms.',
+            'It improves critical thinking in young people.'
+          ],
+          correct: 1,
+          exp: 'The speaker defines misinformation as "false information that spreads quickly and can confuse or mislead people."'
+        },
+        {
+          q: 'Which mental health effects does the speaker link to excessive social media use?',
+          opts: [
+            'Better concentration and improved memory.',
+            'Creativity and problem-solving skills.',
+            'Anxiety, low self-esteem, and feelings of loneliness.',
+            'Increased motivation to exercise and eat well.'
+          ],
+          correct: 2,
+          exp: 'The speaker says too much social media "can cause anxiety, low self-esteem, and feelings of loneliness, especially in young people."'
+        },
+        {
+          q: 'According to the speaker, what privacy risk exists when users share personal information online?',
+          opts: [
+            'Their accounts can be deleted by the platforms.',
+            'They may lose access to their educational content.',
+            'They risk identity theft, cyberbullying, or contact with dangerous strangers.',
+            'Their followers can use their photos without permission.'
+          ],
+          correct: 2,
+          exp: 'The speaker warns: "This can lead to identity theft, cyberbullying, or contact with dangerous strangers."'
+        }
+      ]
+    },
+    {
+      id: '11-2', grade: '11', skill: 'R', label: 'Reading',
+      title: 'Artificial Intelligence: A Revolution We Must Guide',
+      indicator: 'R.2. Understand relations between main ideas and supporting ideas in topical articles and reports in which the authors are presenting and defending a particular point of view in regards to technological advance.',
+      vocab: [
+        ['revolution','a very big and important change in the way things are done'],
+        ['algorithm','a set of rules a computer follows to solve a problem'],
+        ['bias','an unfair tendency to favor one thing over another'],
+        ['autonomous','able to work or make decisions independently, without human control'],
+        ['accountability','the responsibility for your actions and their consequences']
+      ],
+      text: [
+        '🤖 Opinion Article: "Artificial Intelligence: A Revolution We Must Guide"',
+        '',
+        'Artificial intelligence is no longer science fiction. It is already here, shaping how we work, learn, communicate, and make decisions. From the algorithm that recommends what to watch next on Netflix to the AI system that helps doctors detect cancer earlier — the technology is advancing faster than most people realize.',
+        '',
+        'Those who defend AI\'s rapid development argue that it has already saved lives. In medicine, AI tools can analyze thousands of medical images in seconds and identify patterns that even experienced doctors might miss. In education, AI-powered platforms can personalize learning for each student, adjusting the difficulty and pace based on individual needs.',
+        '',
+        'However, critics warn that this progress comes with serious dangers that we cannot ignore. One of the most pressing concerns is algorithmic bias. AI systems learn from data created by humans — and if that data reflects historical inequalities, the AI will too. There are documented cases of AI hiring tools that discriminated against women, and facial recognition systems that are less accurate for people with darker skin tones.',
+        '',
+        'Another major concern is the question of autonomous decision-making. As AI becomes more powerful, it is increasingly making decisions that affect human lives — in criminal justice, loan approvals, and even military operations. The central question is: who is accountable when an AI makes a wrong or harmful decision?',
+        '',
+        'The argument made in this article is clear: AI is not inherently good or bad. It is a tool — and like all tools, its impact depends entirely on the values, intentions, and oversight of the people who build and use it. Governments, companies, and citizens must work together to establish ethical frameworks, transparent regulations, and human accountability at the center of AI development.',
+        '',
+        'The future is not something that happens to us. It is something we choose to build. And right now, we are choosing what kind of AI world we want to live in.'
+      ],
+      mainIdea: {
+        q: 'What point of view is the author DEFENDING in this article?',
+        opts: [
+          'AI is too dangerous and should be stopped immediately.',
+          'AI development should only be controlled by technology companies.',
+          'AI is a powerful tool whose impact depends on how humans choose to build and regulate it.',
+          'AI will solve all major problems in medicine and education without any risks.'
+        ],
+        correct: 2,
+        exp: 'The author argues that AI is neither good nor bad by itself — its impact depends on the values and oversight of those who create and use it, and that ethical regulation is essential.'
+      },
+      details: [
+        {
+          q: 'What supporting idea does the author use to show that AI can BENEFIT medicine?',
+          opts: [
+            'AI tools replace doctors in hospitals.',
+            'AI can analyze thousands of medical images quickly and identify patterns doctors might miss.',
+            'AI makes medicine cheaper for everyone.',
+            'AI creates new medicines that cure all diseases.'
+          ],
+          correct: 1,
+          exp: 'The author says: "AI tools can analyze thousands of medical images in seconds and identify patterns that even experienced doctors might miss."'
+        },
+        {
+          q: 'How does the author explain the problem of algorithmic bias?',
+          opts: [
+            'AI systems are programmed to be unfair on purpose.',
+            'AI learns from human-created data, and if that data reflects inequalities, the AI will too.',
+            'Bias only affects AI systems in developing countries.',
+            'AI systems bias is only a theoretical concern with no real examples.'
+          ],
+          correct: 1,
+          exp: 'The author explains: "if that data reflects historical inequalities, the AI will too" — and provides real examples like biased hiring tools and facial recognition.'
+        },
+        {
+          q: 'According to the article, what is the central concern about autonomous AI decision-making?',
+          opts: [
+            'AI takes too long to make decisions in emergency situations.',
+            'Nobody knows who is responsible when an AI makes a wrong or harmful decision.',
+            'Autonomous AI costs too much for governments to use.',
+            'AI decision-making is only a problem in the military.'
+          ],
+          correct: 1,
+          exp: 'The author asks: "who is accountable when an AI makes a wrong or harmful decision?" — this is the central concern about autonomous decision-making.'
+        },
+        {
+          q: 'What does the author mean by saying "The future is not something that happens to us. It is something we choose to build"?',
+          opts: [
+            'Technology companies will decide the future without public input.',
+            'The future with AI is already determined and cannot be changed.',
+            'People, governments, and companies have the power and responsibility to shape how AI develops.',
+            'Only scientists and engineers can influence the direction of AI technology.'
+          ],
+          correct: 2,
+          exp: 'The closing statement reinforces the article\'s argument that humans — not just technology itself — are responsible for choosing the kind of AI-driven world we create. It is a call to action for all stakeholders.'
+        }
+      ]
+    }
+  ]
+};
+
+// ============================================================
+// STATE
+// ============================================================
+const state = {
+  page: 'index',
+  answers: {}
+};
+
+Object.values(DATA).flat().forEach(act => {
+  state.answers[act.id] = { main: null, details: {}, mainDone: false, detailsDone: false };
+});
+
+function save() {
+  try { localStorage.setItem('nocturno_assessments', JSON.stringify(state)); } catch(e) {}
+}
+(function load() {
+  try {
+    const s = localStorage.getItem('nocturno_assessments');
+    if (s) { const p = JSON.parse(s); state.answers = p.answers || state.answers; }
+  } catch(e) {}
+})();
+
+// ============================================================
+// NAVIGATION
+// ============================================================
+function showPage(id) {
+  state.page = id;
+  document.querySelectorAll('.index-page, .assessment-page').forEach(el => el.style.display = 'none');
+  document.querySelectorAll('.grade-pill').forEach(p => p.classList.remove('active'));
+
+  if (id === 'index') {
+    document.getElementById('page-index').style.display = 'block';
+    document.querySelector('.grade-pill').classList.add('active');
+  } else {
+    const pg = document.getElementById('page-' + id);
+    pg.style.display = 'block';
+    pg.classList.add('active');
+    document.getElementById('pill-' + id).classList.add('active');
+    renderGrade(id);
+  }
+  window.scrollTo({top: 0, behavior: 'smooth'});
+}
+
+// ============================================================
+// RENDER
+// ============================================================
+function renderGrade(g) {
+  renderTabs(g);
+  renderCards(g);
+  updateProgress(g);
+}
+
+function renderTabs(g) {
+  const container = document.getElementById('tabs-' + g);
+  container.innerHTML = '';
+  const acts = DATA[g];
+  const current = state['cur' + g] || acts[0].id;
+  acts.forEach(a => {
+    const btn = document.createElement('button');
+    btn.className = 'tab-btn' + (current === a.id ? ' active' : '');
+    const done = isDone(a.id);
+    if (done) btn.classList.add('done');
+    btn.textContent = a.label + ' ' + (acts.indexOf(a) + 1);
+    btn.onclick = () => {
+      state['cur' + g] = a.id;
+      renderGrade(g);
+      window.scrollTo({top: 0, behavior: 'smooth'});
+    };
+    container.appendChild(btn);
+  });
+}
+
+function isDone(id) {
+  const a = state.answers[id];
+  return a && a.mainDone && a.detailsDone;
+}
+
+function renderCards(g) {
+  const container = document.getElementById('cards-' + g);
+  container.innerHTML = '';
+  const acts = DATA[g];
+  const current = state['cur' + g] || acts[0].id;
+
+  acts.forEach(act => {
+    const ans = state.answers[act.id];
+    const unlocked = ans.mainDone;
+    const isActive = act.id === current;
+    const card = document.createElement('div');
+    card.className = 'act-card' + (isActive ? ' active' : '');
+    card.id = 'card-' + act.id;
+
+    const step1 = buildStep1(act);
+    const step3 = unlocked ? buildStep3(act) : `<div class="lock-msg">Answer the main idea question first to unlock this section.</div>`;
+    const step4 = unlocked ? buildStep4(act, ans) : `<div class="lock-msg">This section unlocks after step 2.</div>`;
+
+    card.innerHTML = `
+      <div class="act-hdr">
+        <div class="act-hdr-text">
+          <div>
+            <span class="act-badge badge-${act.grade}">${g}th Grade</span>
+            <span class="act-badge badge-${act.skill === 'L' ? 'L' : 'R'}">${act.label}</span>
+          </div>
+          <h2>${act.title}</h2>
+        </div>
+      </div>
+
+      <!-- STEP 1 -->
+      <div class="step">
+        <div class="step-hdr">
+          <div class="step-num">1</div>
+          <div class="step-ttl">${act.skill === 'L' ? 'Listen to the audio' : 'Read the text'}</div>
+        </div>
+        ${step1}
+        <div class="vocab">
+          <strong>Vocabulary:</strong><br>
+          ${act.vocab.map(([w,d]) => `<span class="vword"><b>${esc(w)}</b>: ${esc(d)}</span>`).join('')}
+        </div>
+        <div class="indicator">${esc(act.indicator)}</div>
+      </div>
+
+      <!-- STEP 2 -->
+      <div class="step">
+        <div class="step-hdr">
+          <div class="step-num">2</div>
+          <div class="step-ttl">Main idea question</div>
+        </div>
+        <div class="question" id="mq-${act.id}">
+          <div class="q-text">${esc(act.mainIdea.q)}</div>
+          <div class="options">
+            ${act.mainIdea.opts.map((o, i) => `
+              <div class="opt" onclick="selMain('${act.id}', ${i})">
+                <input type="radio" name="main-${act.id}" ${ans.main === i ? 'checked' : ''}>
+                <span>${String.fromCharCode(65+i)}) ${esc(o)}</span>
+              </div>
+            `).join('')}
+          </div>
+          <div class="btn-row">
+            <button class="btn btn-p" id="btn-main-${act.id}" onclick="checkMain('${act.id}')" ${ans.mainDone ? 'disabled' : ''}>
+              ${ans.mainDone ? 'Answer submitted' : 'Check answer'}
+            </button>
+          </div>
+          <div class="fb" id="fb-main-${act.id}"></div>
+        </div>
+      </div>
+
+      <!-- STEP 3 -->
+      <div class="step ${unlocked ? '' : 'locked'}">
+        <div class="step-hdr">
+          <div class="step-num ${unlocked ? '' : 'locked'}">3</div>
+          <div class="step-ttl">${act.skill === 'L' ? 'Listen again' : 'Read again'}</div>
+        </div>
+        ${step3}
+      </div>
+
+      <!-- STEP 4 -->
+      <div class="step ${unlocked ? '' : 'locked'}">
+        <div class="step-hdr">
+          <div class="step-num ${unlocked ? '' : 'locked'}">4</div>
+          <div class="step-ttl">Detail questions</div>
+        </div>
+        ${step4}
+      </div>
+    `;
+    container.appendChild(card);
+    if (ans.mainDone) applyMainFb(act.id);
+    if (ans.detailsDone) applyDetailFb(act.id);
+  });
+}
+
+function buildStep1(act) {
+  if (act.skill === 'L') {
+    return `<div class="audio-wrap">
+      <audio controls preload="none" onerror="showAudioErr('${act.id}')">
+        <source src="${act.audio}" type="audio/mpeg">
+        Your browser does not support the audio player.
+      </audio>
+      <div class="audio-note">Audio file: ${act.audio}</div>
+      <div class="audio-err" id="aerr-${act.id}">
+        Audio not found. Make sure <strong>${act.audio}</strong> is in the same folder as this page.
+      </div>
+    </div>`;
+  }
+  return `<div class="read-text">${act.text.map(t => `<p>${esc(t)}</p>`).join('')}</div>`;
+}
+
+function buildStep3(act) {
+  if (act.skill === 'L') return '<p style="font-size:14px;color:#374151;">Listen to the audio again using the player above. Pay attention to specific details, supporting ideas, and key information.</p>';
+  return '<p style="font-size:14px;color:#374151;">Read the text again above. Look for specific information, supporting ideas, and key words.</p>';
+}
+
+function buildStep4(act, ans) {
+  const questions = act.details.map((q, qi) => `
+    <div class="question" id="dq-${act.id}-${qi}">
+      <div class="q-text"><span class="qnum">${qi+1}</span>${esc(q.q)}</div>
+      <div class="options">
+        ${q.opts.map((o, i) => `
+          <div class="opt" onclick="selDetail('${act.id}', ${qi}, ${i})">
+            <input type="radio" name="d-${act.id}-${qi}" ${ans.details[qi] === i ? 'checked' : ''}>
+            <span>${String.fromCharCode(65+i)}) ${esc(o)}</span>
+          </div>
+        `).join('')}
+      </div>
+      <div class="fb" id="fb-d-${act.id}-${qi}"></div>
+    </div>
+  `).join('');
+
+  return `${questions}
+    <div class="btn-row">
+      <button class="btn btn-p" id="btn-det-${act.id}" onclick="checkDetails('${act.id}')" ${ans.detailsDone ? 'disabled' : ''}>
+        ${ans.detailsDone ? 'Answers submitted' : 'Check all answers'}
+      </button>
+    </div>
+    <div class="score-box" id="sc-${act.id}"></div>`;
+}
+
+// ============================================================
+// INTERACTIONS
+// ============================================================
+function esc(s) {
+  return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+function showAudioErr(id) {
+  const el = document.getElementById('aerr-' + id);
+  if (el) el.style.display = 'block';
+}
+
+function selMain(id, i) {
+  if (state.answers[id].mainDone) return;
+  state.answers[id].main = i;
+  document.querySelectorAll(`input[name="main-${id}"]`).forEach((r,idx) => r.checked = idx === i);
+  document.querySelectorAll(`#mq-${id} .opt`).forEach((o,idx) => o.classList.toggle('selected', idx === i));
+  save();
+}
+
+function checkMain(id) {
+  const ans = state.answers[id];
+  if (ans.main === null) { alert('Please select an option first.'); return; }
+  ans.mainDone = true;
+  save();
+  applyMainFb(id);
+  const g = id.split('-')[0];
+  state['cur' + g] = id;
+  renderGrade(g);
+}
+
+function applyMainFb(id) {
+  const act = Object.values(DATA).flat().find(a => a.id === id);
+  const ans = state.answers[id];
+  const correct = act.mainIdea.correct;
+  const fb = document.getElementById('fb-main-' + id);
+  document.querySelectorAll(`#mq-${id} .opt`).forEach((o, i) => {
+    o.classList.remove('selected','correct','incorrect');
+    if (i === correct) o.classList.add('correct');
+    else if (i === ans.main) o.classList.add('incorrect');
+    o.style.pointerEvents = 'none';
+  });
+  const ok = ans.main === correct;
+  if (fb) {
+    fb.className = 'fb show ' + (ok ? 'correct' : 'incorrect');
+    fb.innerHTML = `<strong>${ok ? 'Correct!' : 'Incorrect'}</strong>${esc(act.mainIdea.exp)}${!ok ? `<br><br><em>Correct answer: ${String.fromCharCode(65+correct)}) ${esc(act.mainIdea.opts[correct])}</em>` : ''}`;
+  }
+  const btn = document.getElementById('btn-main-' + id);
+  if (btn) { btn.disabled = true; btn.textContent = 'Answer submitted'; }
+}
+
+function selDetail(id, qi, i) {
+  if (state.answers[id].detailsDone) return;
+  state.answers[id].details[qi] = i;
+  document.querySelectorAll(`input[name="d-${id}-${qi}"]`).forEach((r,idx) => r.checked = idx === i);
+  document.querySelectorAll(`#dq-${id}-${qi} .opt`).forEach((o,idx) => o.classList.toggle('selected', idx === i));
+  save();
+}
+
+function checkDetails(id) {
+  const act = Object.values(DATA).flat().find(a => a.id === id);
+  const ans = state.answers[id];
+  const missing = act.details.filter((_,qi) => ans.details[qi] === undefined).length;
+  if (missing > 0 && !confirm(`${missing} question(s) unanswered. Check anyway?`)) return;
+  ans.detailsDone = true;
+  save();
+  applyDetailFb(id);
+  const g = id.split('-')[0];
+  updateProgress(g);
+}
+
+function applyDetailFb(id) {
+  const act = Object.values(DATA).flat().find(a => a.id === id);
+  const ans = state.answers[id];
+  let correct = 0;
+  act.details.forEach((q, qi) => {
+    const fb = document.getElementById(`fb-d-${id}-${qi}`);
+    const ua = ans.details[qi];
+    document.querySelectorAll(`#dq-${id}-${qi} .opt`).forEach((o, i) => {
+      o.classList.remove('selected','correct','incorrect');
+      if (i === q.correct) o.classList.add('correct');
+      else if (i === ua) o.classList.add('incorrect');
+      o.style.pointerEvents = 'none';
+    });
+    const ok = ua === q.correct;
+    if (ok) correct++;
+    if (fb) {
+      fb.className = 'fb show ' + (ok ? 'correct' : 'incorrect');
+      fb.innerHTML = `<strong>${ok ? 'Correct!' : (ua === undefined ? 'No answer' : 'Incorrect')}</strong>${esc(q.exp)}`;
+    }
+  });
+  const total = act.details.length;
+  const pct = Math.round(correct/total*100);
+  const sc = document.getElementById('sc-' + id);
+  if (sc) {
+    sc.classList.add('show');
+    const msgs = ['Listen or read again carefully and try again.','Good. Review the questions you missed.','Very good! Solid understanding.','Excellent! Perfect score.'];
+    const mi = pct < 50 ? 0 : pct < 75 ? 1 : pct < 100 ? 2 : 3;
+    sc.innerHTML = `<div class="sl">Score</div><div class="sn">${correct} / ${total}</div><div class="sl">${pct}%</div><div class="sm">${msgs[mi]}</div>`;
+  }
+  const btn = document.getElementById('btn-det-' + id);
+  if (btn) { btn.disabled = true; btn.textContent = 'Answers submitted'; }
+}
+
+function updateProgress(g) {
+  const acts = DATA[g];
+  const done = acts.filter(a => isDone(a.id)).length;
+  const el = document.getElementById('prog-' + g);
+  if (el) el.textContent = `${done} / ${acts.length}`;
+  if (done === acts.length) showSummary(g);
+}
+
+function showSummary(g) {
+  const sum = document.getElementById('sum-' + g);
+  if (!sum) return;
+  sum.classList.add('show');
+  const grid = document.getElementById('sum-grid-' + g);
+  let tc = 0, tq = 0, html = '';
+  DATA[g].forEach(act => {
+    const ans = state.answers[act.id];
+    let c = 0, t = act.details.length + 1;
+    if (ans.main === act.mainIdea.correct) c++;
+    act.details.forEach((q,qi) => { if (ans.details[qi] === q.correct) c++; });
+    tc += c; tq += t;
+    html += `<div class="sum-item"><div class="sl">${act.label}</div><div class="sv">${c} / ${t}</div></div>`;
+  });
+  if (grid) grid.innerHTML = html;
+  const pct = Math.round(tc/tq*100);
+  const numEl = document.getElementById('sum-num-' + g);
+  const msgEl = document.getElementById('sum-msg-' + g);
+  if (numEl) numEl.textContent = `${tc} / ${tq} (${pct}%)`;
+  if (msgEl) {
+    const msgs = ['More practice needed. Please coordinate with your teacher.','Acceptable. Keep practicing.','Good performance.','Very good! Keep it up.','Outstanding! Congratulations!'];
+    msgEl.textContent = msgs[pct < 50 ? 0 : pct < 65 ? 1 : pct < 80 ? 2 : pct < 95 ? 3 : 4];
+  }
+}
+
+function resetGrade(g) {
+  if (!confirm(`Reset all ${g}th grade activities? Progress will be lost.`)) return;
+  DATA[g].forEach(a => {
+    state.answers[a.id] = { main: null, details: {}, mainDone: false, detailsDone: false };
+  });
+  state['cur' + g] = DATA[g][0].id;
+  save();
+  const sum = document.getElementById('sum-' + g);
+  if (sum) sum.classList.remove('show');
+  renderGrade(g);
+}
+
+// ============================================================
+// INIT
+// ============================================================
+document.querySelectorAll('.index-page, .assessment-page').forEach(el => el.style.display = 'none');
+document.getElementById('page-index').style.display = 'block';
+
+</script>
+</body>
+</html>
